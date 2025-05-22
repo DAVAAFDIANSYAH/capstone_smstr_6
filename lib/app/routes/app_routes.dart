@@ -13,6 +13,13 @@ abstract class Routes {
   static const WAVE_CLIPPER = _Paths.WAVE_CLIPPER;
   static const ONBOARDING = _Paths.ONBOARDING;
   static const TUTORIAL = _Paths.TUTORIAL;
+  static const DETAIL = _Paths.DETAIL;
+  static const PLAY = _Paths.PLAY;
+  static const VIDEOS = _Paths.VIDEOS;
+  static const History = _Paths.HISTORY;
+  static const DATA = _Paths.DATA;
+  static const STATISTIK = _Paths.STATISTIK;
+  static const BOTTOMNAV = _Paths.BOTTOMNAV;
 }
 
 abstract class _Paths {
@@ -27,4 +34,11 @@ abstract class _Paths {
   static const WAVE_CLIPPER = '/wave-clipper';
   static const ONBOARDING = '/onboarding';
   static const TUTORIAL = '/tutorial';
+  static const DETAIL = '/detail';
+  static const PLAY = '/play';
+  static const VIDEOS = '/videos';
+  static const History = '/history';
+  static const DATA = '/data';
+  static const STATISTIK = '/statistik';
+  static const BOTTOMNAV = '/bottomnav';
 }

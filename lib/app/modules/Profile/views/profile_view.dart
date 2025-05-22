@@ -2,8 +2,8 @@ import 'package:capstone_project_6/app/modules/Profile/controllers/profile_contr
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Profile extends GetView {
-      final ProfileController controller = Get.put(ProfileController());
+class Profile extends GetView<ProfileController> {
+  final ProfileController controller = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -21,123 +21,123 @@ class Profile extends GetView {
         ),
       ),
       body: Obx(() => Stack(
-        children: [
-          // Light blue top curved section
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 180,
-              decoration: BoxDecoration(
-                color: Color(0xFF274A66),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
-              ),
-            ),
-          ),
-          
-          // Main content
-          controller.isLoading.value
-              ? Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: statusBarHeight + 60),
-                      
-                      // Profile image
-                      Center(
-                        child: Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () => controller.updateProfilePhoto(),
-                              child: Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 3),
-                                  image: DecorationImage(
-                                    image: AssetImage(controller.userProfileImage.value),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 40),
-                            Text(
-                              controller.userName.value,
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              'Your Profile',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      SizedBox(height: 40),
-                      
-                      // Menu items
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            _buildMenuItem(
-                              Icons.person_outline, 
-                              controller.userEmail.value,
-                              onTap: () {
-                                // Could navigate to a detailed profile view
-                              }
-                            ),
-                            SizedBox(height: 20),
-                            _buildMenuItem(
-                              Icons.lock_outline, 
-                              controller.userPassword.value,
-                              onTap: () => controller.changePassword()
-                            ),
-                            SizedBox(height: 20),
-                            _buildMenuItem(
-                              Icons.edit, 
-                              'Edit Profile',
-                              onTap: () => controller.editProfile()
-                            ),
-                            SizedBox(height: 20),
-                            _buildMenuItem(
-                              Icons.logout, 
-                              'Log out', 
-                              isLogout: true,
-                              onTap: () => controller.logout()
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                    ],
+            children: [
+              // Header Hijau Cerah
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 140,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF4CAF50), // Hijau cerah
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
                   ),
                 ),
-              ],
-            )
-          )
-        );
-      }
+              ),
 
-  Widget _buildMenuItem(IconData icon, String title, {bool isLogout = false, VoidCallback? onTap}) {
+              // Main Content
+              controller.isLoading.value
+                  ? Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(height: statusBarHeight + 40),
+
+                          // Foto Profil dari Asset
+                          Center(
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => controller.updateProfilePhoto(),
+                                  child: Container(
+                                    width: 90,
+                                    height: 90,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: Colors.white, width: 3),
+                                      image: DecorationImage(
+                                        image: AssetImage('assets/orang.jpg'),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 40),
+                                Text(
+                                  controller.userName.value,
+                                  style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                SizedBox(height: 3),
+                                Text(
+                                  'Your Profile',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: 40),
+
+                          // Menu
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              children: [
+                                _buildMenuItem(
+                                  Icons.person_outline,
+                                  controller.userEmail.value,
+                                  onTap: () {},
+                                ),
+                                SizedBox(height: 20),
+                                _buildMenuItem(
+                                  Icons.lock_outline,
+                                  controller.userPassword.value,
+                                  onTap: () => controller.changePassword(),
+                                ),
+                                SizedBox(height: 20),
+                                _buildMenuItem(
+                                  Icons.edit,
+                                  'Edit Profile',
+                                  onTap: () => controller.editProfile(),
+                                ),
+                                SizedBox(height: 20),
+                                _buildMenuItem(
+                                  Icons.logout,
+                                  'Log out',
+                                  isLogout: true,
+                                  onTap: () => controller.logout(),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+            ],
+          )),
+    );
+  }
+
+  Widget _buildMenuItem(IconData icon, String title,
+      {bool isLogout = false, VoidCallback? onTap}) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color: Color(0xFF274A66),
+        color: Color(0xFF2E7D32), // Hijau gelap
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListTile(
@@ -154,8 +154,10 @@ class Profile extends GetView {
             fontSize: 14,
           ),
         ),
-        trailing: isLogout ? null : Icon(Icons.arrow_forward_ios, size: 12, color: Colors.black38),
-        contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+        trailing: isLogout
+            ? null
+            : Icon(Icons.arrow_forward_ios, size: 12, color: Colors.white70),
+        contentPadding: EdgeInsets.symmetric(horizontal: 15),
         dense: true,
         onTap: onTap,
       ),

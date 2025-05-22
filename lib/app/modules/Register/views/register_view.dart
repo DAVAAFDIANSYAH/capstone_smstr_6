@@ -8,11 +8,11 @@ class Register extends GetView<RegisterController> {
     Register({Key? key}) : super(key: key) {
     Get.put(RegisterController());
   }
-  @override
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-backgroundColor: Color(0xFF74512D),
+backgroundColor: Colors.green.shade100,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
@@ -97,7 +97,7 @@ backgroundColor: Color(0xFF74512D),
                     // Tombol Register
                     ElevatedButton(
                       onPressed: () {
-                        Get.to(() => Login());
+                        controller.register(); // ini akan panggil method register() di RegisterController
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

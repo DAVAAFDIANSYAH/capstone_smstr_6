@@ -1,24 +1,55 @@
 import 'package:get/get.dart';
 
 class TutorialController extends GetxController {
-  // Observable list of tutorials
-  final tutorials = [
-    {
-      'title': 'Golf Club: Tips Driving untuk Pemula',
-      'videoId': 'me5gjIUe1Ks',
-    },
-    {
-      'title': 'Belajar Swing Dasar dalam Golf',
-      'videoId': 'dQw4w9WgXcQ',
-    },
-    {
-      'title': 'Teknik Putting Profesional',
-      'videoId': '3JZ_D3ELwOQ',
-    },
-  ].obs;
+  final RxList<TutorialVideo> tutorialVideos = <TutorialVideo>[].obs;
+  final RxBool isLoading = true.obs;
 
-  // Method to add a new tutorial
-  void addTutorial(Map<String, String> newTutorial) {
-    tutorials.add(newTutorial);
+  @override
+  void onInit() {
+    super.onInit();
+    loadGolfTutorials();
   }
+
+  // Memuat tutorial yang berhubungan dengan golf
+  void loadGolfTutorials() {
+    // Simulasi data tutorial golf
+    // Dalam aplikasi produksi, ini bisa berasal dari API atau Firebase
+    Future.delayed(const Duration(seconds: 1), () {
+      tutorialVideos.addAll([
+        TutorialVideo(
+          id: 'me5gjIUe1Ks',
+          title: 'Golf Club: Tips Driving untuk Pemula',
+          description: 'Belajar tips driving untuk pemula di golf.',
+          thumbnailUrl: 'https://img.youtube.com/vi/me5gjIUe1Ks/0.jpg',
+        ),
+        TutorialVideo(
+          id: 'r5u52YuNVG8',
+          title: 'TOP 5 DRIVER GOLF TIPS',
+          description: 'Pelajari teknik dasar swing dalam golf untuk pemula.',
+          thumbnailUrl: 'https://img.youtube.com/vi/r5u52YuNVG8/0.jpg',
+        ),
+        TutorialVideo(
+          id: 'hhB1k2PSjWA',
+          title: 'Quick Tips: Basic Tips to Hit a Driver',
+          description: 'Tips dasar untuk memukul driver dengan benar.',
+          thumbnailUrl: 'https://img.youtube.com/vi/hhB1k2PSjWA/0.jpg',
+        ),
+      ]);
+      isLoading.value = false;
+    });
+  }
+}
+
+class TutorialVideo {
+  final String id;
+  final String title;
+  final String description;
+  final String thumbnailUrl;
+
+  TutorialVideo({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.thumbnailUrl,
+  });
 }

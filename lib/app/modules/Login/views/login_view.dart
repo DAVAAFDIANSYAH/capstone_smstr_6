@@ -14,7 +14,7 @@ class Login extends GetView<LoginController> {
     Get.put(LoginController());
 
     return Scaffold(
-backgroundColor: Color(0xFF74512D),
+backgroundColor: Colors.green.shade100,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
@@ -74,10 +74,9 @@ backgroundColor: Color(0xFF74512D),
                     ),
                     SizedBox(height: 20),
                    ElevatedButton(
-  onPressed: () {
-    // Langsung mengarahkan ke halaman Dashboard tanpa memeriksa controller
-    Get.to(Dashboard());
-  },
+            onPressed: () {
+                        controller.loginUser(); // ini akan panggil method register() di RegisterController
+                      },
   style: ElevatedButton.styleFrom(
     backgroundColor: Colors.green,
     minimumSize: const Size(double.infinity, 50),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class ProfileController extends GetxController {
   // Observable user data
   var userName = 'DAVA AFDIANSYAH'.obs;
-  var userEmail = 'dapa@gmail.com'.obs;
+  var userEmail = 'dapzz@gmail.com'.obs;
   var userPassword = '**********'.obs;
   var userProfileImage = 'assets/profile.png'.obs;
   

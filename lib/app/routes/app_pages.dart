@@ -12,12 +12,22 @@ import '../modules/Register/bindings/register_binding.dart';
 import '../modules/Register/views/register_view.dart';
 import '../modules/WaveClipper/bindings/wave_clipper_binding.dart';
 import '../modules/WaveClipper/views/wave_clipper_view.dart';
+import '../modules/bottomnav/bindings/bottomnav_binding.dart';
+import '../modules/bottomnav/views/bottomnav_view.dart';
+import '../modules/detail/bindings/detail_binding.dart';
+import '../modules/detail/views/detail_view.dart';
+import '../modules/history/bindings/history_binding.dart';
+import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
+import '../modules/statistik/bindings/statistik_binding.dart';
+import '../modules/statistik/views/statistik_view.dart';
 import '../modules/tutorial/bindings/tutorial_binding.dart';
 import '../modules/tutorial/views/tutorial_view.dart';
+import '../modules/videos/bindings/videos_binding.dart';
+import '../modules/videos/views/videos_view.dart';
 
 part 'app_routes.dart';
 
@@ -69,8 +79,40 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.TUTORIAL,
-      page: () =>  Tutorial(),
+      page: () => Tutorial(),
       binding: TutorialBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL,
+      page: () => DetailView(product: Get.arguments),
+      binding: DetailBinding(),
+    ),
+//     GetPage(
+//   name: _Paths.PLAY,
+//   page: () => PlayView(videoId: Get.arguments['videoId']), // Ambil parameter dari arguments
+// ),
+    GetPage(
+      name: _Paths.VIDEOS,
+      page: () => VideoDetailPage(
+        videoId: Get.parameters['videoId'] ?? '',
+        title: Get.parameters['title'] ?? 'Video Player',
+      ),
+      binding: VideosBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY,
+      page: () => const History(),
+      binding: HistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.STATISTIK,
+      page: () => const Statistik(),
+      binding: StatistikBinding(),
+    ),
+    GetPage(
+      name: _Paths.BOTTOMNAV,
+      page: () => Bottomnav(),
+      binding: BottomnavBinding(),
     ),
   ];
 }

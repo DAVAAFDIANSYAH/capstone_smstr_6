@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 class Onboarding extends GetView<OnboardingController> {
   const Onboarding({super.key});
   
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

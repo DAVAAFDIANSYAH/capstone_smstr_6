@@ -39,8 +39,18 @@ dependencies:
   get: ^4.7.2
   image_picker: ^0.8.7+3
   google_fonts: ^6.2.1
-  url_launcher: ^6.2.5
+  url_launcher: ^6.1.10
   curved_navigation_bar: ^1.0.3
+  firebase_core: ^2.12.0
+  firebase_auth: ^4.7.0
+  google_sign_in: ^6.0.0
+  http: ^1.3.0
+  flutter_secure_storage: ^8.0.0  
+  youtube_player_flutter: ^9.1.1 # Tambahkan package ini
+  flutter_inappwebview: ^6.0.0-beta.22
+
+
+
 
 
 
