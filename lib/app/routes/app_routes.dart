@@ -20,6 +20,13 @@ abstract class Routes {
   static const DATA = _Paths.DATA;
   static const STATISTIK = _Paths.STATISTIK;
   static const BOTTOMNAV = _Paths.BOTTOMNAV;
+  static const OTP = _Paths.OTP;
+  static const CUACA = _Paths.CUACA;
+  static const BARANG = _Paths.BARANG;
+  static const UPDATEPROFILE = _Paths.UPDATEPROFILE;
+  static const WEATHERMAP = _Paths.WEATHERMAP;
+  static const STREAMLIT = '/streamlit';  // tambahkan ini
+
 }
 
 abstract class _Paths {
@@ -41,4 +48,9 @@ abstract class _Paths {
   static const DATA = '/data';
   static const STATISTIK = '/statistik';
   static const BOTTOMNAV = '/bottomnav';
+  static const OTP = '/otp';
+  static const CUACA = '/cuaca';
+  static const BARANG = '/barang';
+  static const UPDATEPROFILE = '/updateprofile';
+  static const WEATHERMAP = '/weathermap';
 }

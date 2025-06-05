@@ -20,7 +20,7 @@ backgroundColor: Colors.green.shade100,
           child: Stack(
             children: [
               ClipPath(
-                clipper: WaveClipper(),
+                clipper: CurvedBottomClipper(),
                 child: Container(
                   height: 350,
                   width: double.infinity,
@@ -68,7 +68,7 @@ backgroundColor: Colors.green.shade100,
                         },
                         child: const Text(
                           "Forgot Password?",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.blue),
                         ),
                       ),
                     ),
@@ -94,18 +94,19 @@ backgroundColor: Colors.green.shade100,
 ),
 
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildSocialIcon("assets/google.png"),
-                      ],
-                    ),
+                    GestureDetector(
+  onTap: () {
+    controller.signInWithGoogle();
+  },
+  child: _buildSocialIcon("assets/google.png"),
+),
+
                     SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text("Don't have an account? ",
-                            style: TextStyle(color: Colors.white)),
+                            style: TextStyle(color: Colors.blue)),
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
@@ -190,7 +191,7 @@ backgroundColor: Colors.green.shade100,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
         child: Image.asset(
-          assetPath,
+          assetPath,  
           width: 40,
           height: 40,
           fit: BoxFit.cover,

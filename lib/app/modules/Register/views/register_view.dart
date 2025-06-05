@@ -5,27 +5,27 @@ import 'package:get/get.dart';
 import '../controllers/register_controller.dart';
 
 class Register extends GetView<RegisterController> {
-    Register({Key? key}) : super(key: key) {
+  Register({Key? key}) : super(key: key) {
     Get.put(RegisterController());
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.green.shade100,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
             children: [
               // Header dengan Wave dan Gambar
               ClipPath(
-                clipper: WaveClipper(),
+                clipper: CurvedBottomClipper(),
                 child: Container(
                   height: 398,
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/register.jpg'), // Ganti sesuai gambar kamu
+                      image: AssetImage('assets/register.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -45,22 +45,8 @@ backgroundColor: Colors.green.shade100,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Text(
-                          //   "Register",
-                          //   style: TextStyle(
-                          //     color: Colors.white,
-                          //     fontSize: 28,
-                          //     fontWeight: FontWeight.bold,
-                          //   ),
-                          // ),
+                          // Optional header text can go here
                           SizedBox(height: 8),
-                          // Text(
-                          //   "Daftar untuk membuat akun baru",
-                          //   style: TextStyle(
-                          //     color: Colors.white70,
-                          //     fontSize: 14,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -86,18 +72,13 @@ backgroundColor: Colors.green.shade100,
                       icon: Icons.email_outlined,
                     ),
                     const SizedBox(height: 15),
-                    _buildInputField(
-                      controller: controller.passwordController,
-                      label: 'Password',
-                      icon: Icons.lock_outline,
-                      // isPassword: true,
-                    ),
+                    _buildPasswordField(controller),
                     const SizedBox(height: 30),
 
                     // Tombol Register
                     ElevatedButton(
                       onPressed: () {
-                        controller.register(); // ini akan panggil method register() di RegisterController
+                        controller.register();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -122,7 +103,7 @@ backgroundColor: Colors.green.shade100,
                       children: [
                         const Text(
                           "Already have an account? ",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.blue),
                         ),
                         const SizedBox(width: 5),
                         GestureDetector(
@@ -150,6 +131,7 @@ backgroundColor: Colors.green.shade100,
     );
   }
 
+  // Text field umum (Name, Email)
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,
@@ -169,17 +151,20 @@ backgroundColor: Colors.green.shade100,
     );
   }
 
+  // Password field dengan toggle visibility
   Widget _buildPasswordField(RegisterController controller) {
-    return TextField(
+    return Obx(() => TextField(
       controller: controller.passwordController,
       obscureText: !controller.isPasswordVisible.value,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.lock_outline, color: Colors.green),
         suffixIcon: IconButton(
-          icon: Obx(() => Icon(
-            controller.isPasswordVisible.value ? Icons.visibility : Icons.visibility_off,
+          icon: Icon(
+            controller.isPasswordVisible.value
+                ? Icons.visibility
+                : Icons.visibility_off,
             color: Colors.green,
-          )),
+          ),
           onPressed: controller.togglePasswordVisibility,
         ),
         hintText: 'Password',
@@ -189,6 +174,6 @@ backgroundColor: Colors.green.shade100,
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
-    );
+    ));
   }
 }

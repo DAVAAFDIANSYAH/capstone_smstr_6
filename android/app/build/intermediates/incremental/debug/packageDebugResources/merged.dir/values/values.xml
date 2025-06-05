@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">751384058788-cms6sjk8ev04rgtrmto9qg4tg2hcauuj.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">751384058788</string>
+    <string name="google_api_key" translatable="false">AIzaSyAbsB8nD1L-sLayJV6AQJrPg61tCl0Ss74</string>
+    <string name="google_app_id" translatable="false">1:751384058788:android:f0ad50d4e57ef549d07f31</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAbsB8nD1L-sLayJV6AQJrPg61tCl0Ss74</string>
+    <string name="google_storage_bucket" translatable="false">capstone6-5ef13.firebasestorage.app</string>
+    <string name="project_id" translatable="false">capstone6-5ef13</string>
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        
+        <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+    </style>
+</resources>

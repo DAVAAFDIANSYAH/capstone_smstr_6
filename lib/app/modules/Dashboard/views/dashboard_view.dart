@@ -1,43 +1,64 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:capstone_project_6/app/modules/Dashboard/controllers/dashboard_controller.dart';
+import 'package:capstone_project_6/app/modules/barang/controllers/barang_controller.dart';
+import 'package:capstone_project_6/app/modules/barang/views/barang_view.dart';
 import 'package:capstone_project_6/app/modules/detail/views/detail_view.dart';
 import 'package:capstone_project_6/app/modules/history/views/history_view.dart';
 import 'package:capstone_project_6/app/modules/statistik/views/statistik_view.dart';
 import 'package:capstone_project_6/app/modules/tutorial/views/tutorial_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class Dashboard extends GetView<DashboardController> {
+class Dashboard extends StatefulWidget {
+  @override
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
   final DashboardController controller = Get.put(DashboardController());
+  final BarangController barangController = Get.put(BarangController());
+  final box = GetStorage();
+  final PageController _pageController = PageController(viewportFraction: 0.9);
+  int _currentPage = 0;
+  Timer? _timer;
 
-  final List<Map<String, String>> golfProducts = [
-    {
-      'image': 'assets/beranda.jpeg',
-      'title': 'Alat Golf A',
-      'rating': '4.8',
-      'price': '1.000.000',
-    },
-    {
-      'image': 'assets/beranda.jpeg',
-      'title': 'Alat Golf B',
-      'rating': '5.0',
-      'price': '1.200.000',
-    },
-    {
-      'image': 'assets/beranda.jpeg',
-      'title': 'Alat Golf C',
-      'rating': '4.7',
-      'price': '1.300.000',
-    },
-    {
-      'image': 'assets/beranda.jpeg',
-      'title': 'Alat Golf D',
-      'rating': '4.9',
-      'price': '1.100.000',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _startAutoSlide();
+  }
+
+  void _startAutoSlide() {
+    _timer = Timer.periodic(const Duration(seconds: 6), (Timer timer) {
+      if (_currentPage < 4) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final String userName = box.read('userName') ?? 'Guest User';
+
     return Scaffold(
       backgroundColor: Colors.green.shade50,
       body: SingleChildScrollView(
@@ -63,29 +84,51 @@ class Dashboard extends GetView<DashboardController> {
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Hello, Dapzz',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                            'Hello, $userName',
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
                               color: Colors.white,
+                              letterSpacing: 1,
+                              shadows: const [
+                                Shadow(
+                                  offset: Offset(1.5, 1.5),
+                                  blurRadius: 3.0,
+                                  color: Colors.black26,
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 6),
+                          const SizedBox(height: 6),
                           Text(
-                            'Wellcome to SwingPRO',
+                            'Welcome to SwingPRO',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
                               color: Colors.white70,
+                              fontStyle: FontStyle.italic,
+                              shadows: [
+                                Shadow(
+                                  offset: Offset(0, 1),
+                                  blurRadius: 3,
+                                  color: Colors.black.withOpacity(0.4),
+                                ),
+                              ],
+                              letterSpacing: 0.8,
                             ),
                           ),
                         ],
                       ),
-                      const CircleAvatar(
-                        radius: 35,
-                        backgroundImage: AssetImage('assets/orang.jpg'),
-                      ),
+                      Obx(() => CircleAvatar(
+                            radius: 35,
+                            backgroundImage: controller.userProfileImagePath.value
+                                    .startsWith('assets/')
+                                ? AssetImage(controller.userProfileImagePath.value)
+                                    as ImageProvider
+                                : FileImage(File(controller.userProfileImagePath.value)),
+                          )),
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -100,13 +143,15 @@ class Dashboard extends GetView<DashboardController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 160,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
+                    height: 190,
+                    child: PageView(
+                      controller: _pageController,
                       children: [
-                        _buildPromoCard('assets/g1.jpg'),
-                        _buildPromoCard('assets/g2.jpg'),
-                        _buildPromoCard('assets/g3.jpg'),
+                        _buildlapangan('assets/g1.jpg'),
+                        _buildlapangan('assets/g2.jpg'),
+                        _buildlapangan('assets/g3.jpg'),
+                        _buildlapangan('assets/g4.jpg'),
+                        _buildlapangan('assets/g5.jpg'),
                       ],
                     ),
                   ),
@@ -129,9 +174,9 @@ class Dashboard extends GetView<DashboardController> {
                         ),
                         _buildCategory(
                           'assets/data.png',
-                          "Statistik",
+                          "Visualisasi",
                           Colors.green.shade100,
-                          () => Get.to(() => const Statistik()),
+                          () => Get.toNamed('/statistik'),
                         ),
                         _buildCategory(
                           'assets/history.png',
@@ -143,30 +188,57 @@ class Dashboard extends GetView<DashboardController> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const Text(
-                    "Recomend alat golf",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Recomend alat golf",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      GestureDetector(
+                        onTap: () => Get.to(() => Barang()),
+                        child: Text(
+                          "View All",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.green.shade700,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 0),
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 3 / 4,
-                    children: golfProducts.map((product) {
-                      return _buildFoodCard(
-                        image: product['image']!,
-                        title: product['title']!,
-                        rating: product['rating']!,
-                        price: product['price']!,
-                        onTap: () {
-                          Get.to(() => DetailView(product: product));
-                        },
-                      );
-                    }).toList(),
-                  ),
+                  const SizedBox(height: 10),
+                  Obx(() {
+                    if (barangController.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (barangController.products.isEmpty) {
+                      return const Center(child: Text("Tidak ada produk"));
+                    }
+
+                    final productsToShow = barangController.products.length > 2
+                        ? barangController.products.sublist(0, 2)
+                        : barangController.products;
+
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: productsToShow.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 3 / 4,
+                      ),
+                      itemBuilder: (context, index) {
+                        final product = productsToShow[index];
+                        return _buildProduct(product);
+                      },
+                    );
+                  }),
                 ],
               ),
             ),
@@ -176,7 +248,8 @@ class Dashboard extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildCategory(String imagePath, String title, Color color, VoidCallback onTap) {
+  Widget _buildCategory(
+      String imagePath, String title, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -198,7 +271,7 @@ class Dashboard extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildPromoCard(String imagePath) {
+  Widget _buildlapangan(String imagePath) {
     return Container(
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.all(8),
@@ -217,23 +290,17 @@ class Dashboard extends GetView<DashboardController> {
         borderRadius: BorderRadius.circular(12),
         child: Image.asset(
           imagePath,
-          height: 160,
-          width: 260,
+          height: 200,
+          width: 300,
           fit: BoxFit.cover,
         ),
       ),
     );
   }
 
-  Widget _buildFoodCard({
-    required String image,
-    required String title,
-    required String rating,
-    required String price,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildProduct(Product product) {
     return InkWell(
-      onTap: onTap,
+      onTap: () => Get.to(() => DetailView(product: product)),
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
@@ -255,38 +322,41 @@ class Dashboard extends GetView<DashboardController> {
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
               ),
-              child: Image.asset(
-                image,
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              child: product.gambar.isNotEmpty
+                  ? Image.network(
+                      product.gambar,
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.broken_image),
+                    )
+                  : Container(
+                      height: 120,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.image, size: 50),
+                    ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, size: 14, color: Colors.orange),
-                      const SizedBox(width: 4),
-                      Text(rating, style: const TextStyle(fontSize: 12)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    price,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.green,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.nama,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(height: 8),
+                    Text(
+                      product.harga,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ]),
             ),
           ],
         ),

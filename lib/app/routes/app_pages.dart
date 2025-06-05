@@ -1,3 +1,4 @@
+import 'package:capstone_project_6/app/modules/statistik/views/streamlit.dart';
 import 'package:get/get.dart';
 
 import '../modules/ArtScan/bindings/art_scan_binding.dart';
@@ -12,6 +13,8 @@ import '../modules/Register/bindings/register_binding.dart';
 import '../modules/Register/views/register_view.dart';
 import '../modules/WaveClipper/bindings/wave_clipper_binding.dart';
 import '../modules/WaveClipper/views/wave_clipper_view.dart';
+import '../modules/barang/bindings/barang_binding.dart';
+import '../modules/barang/views/barang_view.dart';
 import '../modules/bottomnav/bindings/bottomnav_binding.dart';
 import '../modules/bottomnav/views/bottomnav_view.dart';
 import '../modules/detail/bindings/detail_binding.dart';
@@ -22,6 +25,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
+import '../modules/otp/bindings/otp_binding.dart';
+import '../modules/otp/views/otp_view.dart';
 import '../modules/statistik/bindings/statistik_binding.dart';
 import '../modules/statistik/views/statistik_view.dart';
 import '../modules/tutorial/bindings/tutorial_binding.dart';
@@ -101,18 +106,32 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HISTORY,
-      page: () => const History(),
+      page: () =>  History(),
       binding: HistoryBinding(),
     ),
     GetPage(
       name: _Paths.STATISTIK,
-      page: () => const Statistik(),
+      page: () => Statistik(),
       binding: StatistikBinding(),
     ),
     GetPage(
       name: _Paths.BOTTOMNAV,
       page: () => Bottomnav(),
       binding: BottomnavBinding(),
+    ),
+    GetPage(
+      name: _Paths.OTP,
+      page: () => VerifyOtpView(),
+      binding: OtpBinding(),
+    ),
+    GetPage(
+      name: _Paths.BARANG,
+      page: () => Barang(),
+      binding: BarangBinding(),
+    ),
+     GetPage(
+      name: '/streamlit',
+      page: () => const StreamlitView(),
     ),
   ];
 }
