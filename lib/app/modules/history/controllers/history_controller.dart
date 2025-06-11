@@ -25,8 +25,8 @@ class HistoryController extends GetxController {
 
     try {
       final box = GetStorage();
-      final token = box.read('jwt_token');
-      final email = box.read('user_email');
+     final token = box.read('jwt_token') ?? box.read('google_id_token');
+  
 
       
       if (token == null) {

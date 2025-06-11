@@ -25,8 +25,9 @@ abstract class Routes {
   static const BARANG = _Paths.BARANG;
   static const UPDATEPROFILE = _Paths.UPDATEPROFILE;
   static const WEATHERMAP = _Paths.WEATHERMAP;
-  static const STREAMLIT = '/streamlit';  // tambahkan ini
-
+  static const STREAMLIT = '/streamlit'; // tambahkan ini
+  static const HISTORTLOGIN = _Paths.HISTORTLOGIN;
+  static const HISTORY_LOGIN = _Paths.HISTORY_LOGIN;
 }
 
 abstract class _Paths {
@@ -53,4 +54,6 @@ abstract class _Paths {
   static const BARANG = '/barang';
   static const UPDATEPROFILE = '/updateprofile';
   static const WEATHERMAP = '/weathermap';
+  static const HISTORTLOGIN = '/histortlogin';
+  static const HISTORY_LOGIN = '/history-login';
 }

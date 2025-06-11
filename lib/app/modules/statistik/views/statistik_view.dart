@@ -60,30 +60,6 @@ class Statistik extends GetView {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              // Button untuk membuka Streamlit (alternatif di body)
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 20),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const StreamlitView()),
-                    );
-                  },
-                  icon: const Icon(Icons.analytics),
-                  label: const Text('Buka Visualisasi SwingPro'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal.shade600,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 20),
 
               // Pie Chart

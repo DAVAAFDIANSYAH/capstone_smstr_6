@@ -1,4 +1,3 @@
-import 'package:capstone_project_6/app/modules/statistik/views/streamlit.dart';
 import 'package:get/get.dart';
 
 import '../modules/ArtScan/bindings/art_scan_binding.dart';
@@ -29,6 +28,7 @@ import '../modules/otp/bindings/otp_binding.dart';
 import '../modules/otp/views/otp_view.dart';
 import '../modules/statistik/bindings/statistik_binding.dart';
 import '../modules/statistik/views/statistik_view.dart';
+import '../modules/statistik/views/streamlit.dart';
 import '../modules/tutorial/bindings/tutorial_binding.dart';
 import '../modules/tutorial/views/tutorial_view.dart';
 import '../modules/videos/bindings/videos_binding.dart';
@@ -106,7 +106,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HISTORY,
-      page: () =>  History(),
+      page: () => History(),
       binding: HistoryBinding(),
     ),
     GetPage(
@@ -129,9 +129,10 @@ class AppPages {
       page: () => Barang(),
       binding: BarangBinding(),
     ),
-     GetPage(
+    GetPage(
       name: '/streamlit',
       page: () => const StreamlitView(),
     ),
+
   ];
 }
