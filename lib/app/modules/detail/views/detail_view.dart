@@ -1,6 +1,8 @@
 import 'package:capstone_project_6/app/modules/barang/controllers/barang_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailView extends GetView {
@@ -49,21 +51,21 @@ class DetailView extends GetView {
               // Nama & Harga
               Text(
                 product.nama,
-                style: const TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
-                'Rp ${product.harga}',
-                style: const TextStyle(
-                  fontSize: 18,
+                'Rp ${NumberFormat('#,###', 'id_ID').format(product.harga)}',
+                style: GoogleFonts.poppins(
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  fontSize: 25,
+                  color: Colors.green.shade700,
                 ),
               ),
               const SizedBox(height: 8),
 
-              // Kategori
+              // Kategor
               Text(
                 'Kategori: ${product.kategori}',
                 style: const TextStyle(fontSize: 14, color: Colors.grey),
@@ -83,21 +85,23 @@ class DetailView extends GetView {
 
               // Tombol Link
               Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 50, // tinggi button
-                    child: ElevatedButton.icon(
-                      onPressed: () => _launchURL(product.link),
-                      icon: const Icon(Icons.shopping_cart, size: 24), // ukuran icon
-                      label: const Text('Beli Sekarang', style: TextStyle(fontSize: 16)), // ukuran text
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        // padding bisa dikurangi kalau mau lebih pas
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 50, // tinggi button
+                      child: ElevatedButton.icon(
+                        onPressed: () => _launchURL(product.link),
+                        icon: const Icon(Icons.shopping_cart,
+                            size: 24), // ukuran icon
+                        label: const Text('Beli Sekarang',
+                            style: TextStyle(fontSize: 16)), // ukuran text
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          // padding bisa dikurangi kalau mau lebih pas
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
                     ),

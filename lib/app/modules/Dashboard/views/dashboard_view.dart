@@ -11,11 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 class Dashboard extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 }
+
+final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp');
 
 class _DashboardState extends State<Dashboard> {
   final DashboardController controller = Get.put(DashboardController());
@@ -85,21 +89,36 @@ class _DashboardState extends State<Dashboard> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Hello, $userName',
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              letterSpacing: 1,
-                              shadows: const [
-                                Shadow(
-                                  offset: Offset(1.5, 1.5),
-                                  blurRadius: 3.0,
-                                  color: Colors.black26,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Hello, $userName',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  letterSpacing: 1,
+                                  shadows: const [
+                                    Shadow(
+                                      offset: Offset(1.5, 1.5),
+                                      blurRadius: 3.0,
+                                      color: Colors.black26,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(width: 8),
+                              SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: Lottie.asset(
+                                  'assets/dashboard.json',
+                                  repeat: true,
+                                  animate: true,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 6),
                           Text(
@@ -123,11 +142,14 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Obx(() => CircleAvatar(
                             radius: 35,
-                            backgroundImage: controller.userProfileImagePath.value
+                            backgroundImage: controller
+                                    .userProfileImagePath.value
                                     .startsWith('assets/')
-                                ? AssetImage(controller.userProfileImagePath.value)
+                                ? AssetImage(
+                                        controller.userProfileImagePath.value)
                                     as ImageProvider
-                                : FileImage(File(controller.userProfileImagePath.value)),
+                                : FileImage(File(
+                                    controller.userProfileImagePath.value)),
                           )),
                     ],
                   ),
@@ -138,7 +160,8 @@ class _DashboardState extends State<Dashboard> {
 
             // Promo & Feature Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -167,19 +190,19 @@ class _DashboardState extends State<Dashboard> {
                       scrollDirection: Axis.horizontal,
                       children: [
                         _buildCategory(
-                          'assets/yt.png',
+                          'assets/yt.json',
                           "Tutorial",
                           Colors.blue.shade100,
                           () => Get.to(() => Tutorial()),
                         ),
                         _buildCategory(
-                          'assets/data.png',
+                          'assets/visualisasi.json',
                           "Visualisasi",
                           Colors.green.shade100,
-                          () => Get.toNamed('/statistik'),
+                          () => Get.toNamed('/streamlit'),
                         ),
                         _buildCategory(
-                          'assets/history.png',
+                          'assets/history.json',
                           "History",
                           Colors.amber.shade100,
                           () => Get.toNamed('/history'),
@@ -193,7 +216,8 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       const Text(
                         "Recomend alat golf",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
                         onTap: () => Get.to(() => Barang()),
@@ -203,7 +227,6 @@ class _DashboardState extends State<Dashboard> {
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.green.shade700,
-                            decoration: TextDecoration.underline,
                           ),
                         ),
                       ),
@@ -227,7 +250,8 @@ class _DashboardState extends State<Dashboard> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: productsToShow.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
@@ -249,11 +273,14 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildCategory(
-      String imagePath, String title, Color color, VoidCallback onTap) {
+      String assetPath, String title, Color color, VoidCallback onTap) {
+    final isLottie = assetPath.toLowerCase().endsWith('.json');
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 110,
+        height: 100,
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
           color: color,
@@ -262,9 +289,27 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(imagePath, width: 30, height: 30, fit: BoxFit.contain),
+            SizedBox(
+              height: 43,
+              width: 43,
+              child: isLottie
+                  ? Lottie.asset(
+                      assetPath,
+                      fit: BoxFit.contain,
+                    )
+                  : Image.asset(
+                      assetPath,
+                      fit: BoxFit.contain,
+                    ),
+            ),
             const SizedBox(height: 6),
-            Text(title, style: const TextStyle(fontSize: 12)),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),
@@ -349,13 +394,13 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      product.harga,
-                      style: const TextStyle(
+                      'Rp ${NumberFormat('#,###', 'id_ID').format(product.harga)}',
+                      style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: Colors.green,
+                        color: Colors.green.shade700,
                       ),
-                    ),
+                    )
                   ]),
             ),
           ],

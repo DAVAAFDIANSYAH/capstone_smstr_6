@@ -4,6 +4,8 @@ import '../modules/ArtScan/bindings/art_scan_binding.dart';
 import '../modules/ArtScan/views/art_scan_view.dart';
 import '../modules/Dashboard/bindings/dashboard_binding.dart';
 import '../modules/Dashboard/views/dashboard_view.dart';
+import '../modules/HistoryLogin/bindings/history_login_binding.dart';
+import '../modules/HistoryLogin/views/history_login_view.dart';
 import '../modules/Login/bindings/login_binding.dart';
 import '../modules/Login/views/login_view.dart';
 import '../modules/Profile/bindings/profile_binding.dart';
@@ -133,6 +135,10 @@ class AppPages {
       name: '/streamlit',
       page: () => const StreamlitView(),
     ),
-
+    GetPage(
+      name: _Paths.HISTORY_LOGIN,
+      page: () => const HistoryLoginView(),
+      binding: HistoryLoginBinding(),
+    ),
   ];
 }

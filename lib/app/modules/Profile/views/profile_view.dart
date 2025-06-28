@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:capstone_project_6/app/modules/HistoryLogin/views/history_login_view.dart';
 import 'package:capstone_project_6/app/modules/Profile/views/editprofile.dart';
+import 'package:capstone_project_6/app/modules/WaveClipper/views/wave_clipper_view.dart';
+import 'package:capstone_project_6/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_project_6/app/modules/Profile/controllers/profile_controller.dart';
@@ -22,14 +25,11 @@ class Profile extends GetView<ProfileController> {
                 top: 0,
                 left: 0,
                 right: 0,
-                child: Container(
-                  height: 140,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF4CAF50),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    ),
+                child: ClipPath(
+                  clipper: CurvedBottomClipper(),
+                  child: Container(
+                    height: 170, // boleh disesuaikan tinggi gelombangnya
+                    color: Colors.green.shade400,
                   ),
                 ),
               ),
@@ -38,33 +38,60 @@ class Profile extends GetView<ProfileController> {
                   : SingleChildScrollView(
                       child: Column(
                         children: [
-                          SizedBox(height: statusBarHeight + 40),
+                          SizedBox(height: statusBarHeight + 70),
                           Center(
                             child: Column(
                               children: [
                                 GestureDetector(
                                   onTap: () => controller.updateProfilePhoto(),
-                                  child: Obx(() => Container(
-                                        width: 90,
-                                        height: 90,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: Colors.white, width: 3),
-                                          image: DecorationImage(
-                                            image: controller.userProfileImage.value
-                                                    .startsWith('assets/')
-                                                ? AssetImage(
-                                                    controller.userProfileImage.value)
-                                                : FileImage(
-                                                    File(controller.userProfileImage.value))
-                                                    as ImageProvider,
-                                            fit: BoxFit.cover,
+                                  child: Obx(() => Stack(
+                                        children: [
+                                          Container(
+                                            width: 90,
+                                            height: 90,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 3),
+                                              image: DecorationImage(
+                                                image: controller
+                                                        .userProfileImage.value
+                                                        .startsWith('assets/')
+                                                    ? AssetImage(controller
+                                                        .userProfileImage.value)
+                                                    : FileImage(
+                                                        File(controller
+                                                            .userProfileImage
+                                                            .value),
+                                                      ) as ImageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          Positioned(
+                                            bottom: 0,
+                                            right: 0,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                    color: Colors.grey.shade300,
+                                                    width: 1),
+                                              ),
+                                              child: const Icon(
+                                                Icons.camera_alt,
+                                                size: 18,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       )),
                                 ),
-                                SizedBox(height: 40),
+                                SizedBox(height: 15),
                                 Text(
                                   'Your Profile',
                                   style: TextStyle(
@@ -91,14 +118,23 @@ class Profile extends GetView<ProfileController> {
                                     controller.userPassword.value,
                                     onTap: () => controller.changePassword()),
                                 SizedBox(height: 20),
-                                _buildMenuItem(
-                                  Icons.edit,
-                                  'Edit Profile',
-                                  onTap: () => Get.to(() => EditProfile()),
-                                ),
+
+                                // Tampilkan edit profile dan spacing hanya jika login bukan google
+                                if (controller.loginMethod.value !=
+                                    'google') ...[
+                                  _buildMenuItem(Icons.edit, 'Edit Profile',
+                                      onTap: () =>
+                                          Get.to(() => const EditProfile())),
+                                  SizedBox(height: 20),
+                                ],
+
+                                _buildMenuItem(Icons.history, 'Riwayat',
+                                    onTap: () =>
+                                        Get.toNamed(Routes.HISTORY_LOGIN)),
                                 SizedBox(height: 20),
                                 _buildMenuItem(Icons.logout, 'Log out',
-                                    isLogout: true, onTap: () => controller.logout()),
+                                    isLogout: true,
+                                    onTap: () => controller.logout()),
                               ],
                             ),
                           ),
@@ -120,7 +156,8 @@ class Profile extends GetView<ProfileController> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListTile(
-        leading: Icon(icon, color: isLogout ? Colors.red : Colors.white, size: 20),
+        leading:
+            Icon(icon, color: isLogout ? Colors.red : Colors.white, size: 20),
         title: Text(
           title,
           style: TextStyle(

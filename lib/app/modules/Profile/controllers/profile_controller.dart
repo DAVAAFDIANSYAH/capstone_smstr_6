@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:capstone_project_6/app/modules/Dashboard/controllers/dashboard_controller.dart';
+import 'package:capstone_project_6/app/modules/Login/controllers/login_controller.dart';
 import 'package:capstone_project_6/app/modules/Profile/views/editprofile.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +19,8 @@ class ProfileController extends GetxController {
   var userPassword = '********'.obs;
   var userProfileImage = 'assets/profile.png'.obs; // default asset path
   var isLoading = false.obs;
+  var loginMethod = 'manual'.obs; // default ke manual
+
 
   final String apiUrl = 'https://auth-rho-ochre.vercel.app/update-profile'; // ganti ini
 
@@ -28,7 +32,7 @@ class ProfileController extends GetxController {
 
   void loadUserData() {
     isLoading.value = true;
-
+    loginMethod.value = box.read<String>('authType') ?? 'manual';
     userName.value = box.read<String>('userName') ?? 'Guest User';
     userEmail.value = box.read<String>('userEmail') ?? 'guest@example.com';
     userPassword.value = box.read<String>('userPassword') ?? '********';
@@ -136,37 +140,71 @@ class ProfileController extends GetxController {
   }
 
   void logout() {
-    Get.dialog(
-      AlertDialog(
-        title: Text('Logout'),
-        content: Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              // JANGAN hapus gambar profile saat logout
-              // Hanya hapus data login saja
-              box.remove('userName');
-              box.remove('userEmail');
-              box.remove('userPassword');
-              box.remove('jwt_token');
-              box.remove('google_access_token');
-              box.remove('authType');
-              
-              // Gambar profile tetap tersimpan dengan key email
+  final token = box.read('jwt_token'); // Ambil token
 
-              Get.offAll(() => Onboarding());
-            },
-            child: Text(
-              'Logout',
-              style: TextStyle(color: Colors.red),
-            ),
+  Get.dialog(
+    AlertDialog(
+      title: Text('Logout'),
+      content: Text('Are you sure you want to logout?'),
+      actions: [
+        TextButton(
+          onPressed: () => Get.back(),
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            final deviceInfo = await getDeviceInfo(); // ⬅️ Tambahkan ini
+            try {
+              final response = await http.post(
+                Uri.parse('https://auth-rho-ochre.vercel.app/logout'),
+                headers: {
+                  'Authorization': 'Bearer $token',
+                  'Content-Type': 'application/json',
+                   'Device-Info': deviceInfo, // ⬅️ Header penting
+
+                },
+              );
+
+              print('📤 Logout status: ${response.statusCode}');
+              print('📤 Logout response: ${response.body}');
+            } catch (e) {
+              print('❌ Gagal memanggil logout API: $e');
+            }
+
+            // 2. Hapus data login (jangan hapus profile image)
+            box.remove('userName');
+            box.remove('userEmail');
+            box.remove('userPassword');
+            box.remove('jwt_token');
+            box.remove('google_access_token');
+            box.remove('authType');
+
+            // 3. Navigasi ke halaman onboarding
+            Get.offAll(() => Onboarding());
+          },
+          child: Text(
+            'Logout',
+            style: TextStyle(color: Colors.red),
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ),
+  );
+}
+Future<String> getDeviceInfo() async {
+  final deviceInfoPlugin = DeviceInfoPlugin();
+  try {
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      return 'Android: ${androidInfo.manufacturer} ${androidInfo.model}';
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfoPlugin.iosInfo;
+      return 'iOS: ${iosInfo.name} ${iosInfo.systemVersion}';
+    } else {
+      return 'Unknown Device';
+    }
+  } catch (e) {
+    return 'Unknown Device';
   }
+}
 }

@@ -4,6 +4,7 @@ import 'package:capstone_project_6/app/modules/Register/views/register_view.dart
 import 'package:capstone_project_6/app/modules/WaveClipper/views/wave_clipper_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class Login extends GetView<LoginController> {
   Login({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class Login extends GetView<LoginController> {
     Get.put(LoginController());
 
     return Scaffold(
-backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.green.shade100,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Stack(
@@ -58,48 +59,50 @@ backgroundColor: Colors.green.shade100,
                       icon: Icons.email_outlined,
                     ),
                     SizedBox(height: 15),
-                    Obx(() => _buildPasswordField()), // Menggunakan Obx untuk visibilitas password
+                    Obx(() =>
+                        _buildPasswordField()), // Menggunakan Obx untuk visibilitas password
                     SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          // TODO: Forgot password
-                        },
-                        child: const Text(
-                          "Forgot Password?",
-                          style: TextStyle(color: Colors.blue),
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: TextButton(
+                    //     onPressed: () {
+                    //       // TODO: Forgot password
+                    //     },
+                    //     child: const Text(
+                    //       "Forgot Password?",
+                    //       style: TextStyle(color: Colors.blue),
+                    //     ),
+                    //   ),
+                    // ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        controller
+                            .loginUser(); // ini akan panggil method register() di RegisterController
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Log In',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
-                   ElevatedButton(
-            onPressed: () {
-                        controller.loginUser(); // ini akan panggil method register() di RegisterController
-                      },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.green,
-    minimumSize: const Size(double.infinity, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  ),
-  child: const Text(
-    'Log In',
-    style: TextStyle(
-      fontSize: 18,
-      color: Colors.white,
-    ),
-  ),
-),
 
                     SizedBox(height: 20),
                     GestureDetector(
-  onTap: () {
-    controller.signInWithGoogle();
-  },
-  child: _buildSocialIcon("assets/google.png"),
-),
+                      onTap: () {
+                        controller.signInWithGoogle();
+                      },
+                      child: _buildSocialIcon("assets/google.json"),
+                    ),
 
                     SizedBox(height: 10),
                     Row(
@@ -165,11 +168,11 @@ backgroundColor: Colors.green.shade100,
         prefixIcon: const Icon(Icons.lock_outline, color: Colors.green),
         suffixIcon: IconButton(
           icon: Obx(() => Icon(
-            controller.isPasswordVisible.value
-                ? Icons.visibility
-                : Icons.visibility_off,
-            color: Colors.green,
-          )),
+                controller.isPasswordVisible.value
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                color: Colors.green,
+              )),
           onPressed: () {
             controller.togglePasswordVisibility();
           },
@@ -186,17 +189,27 @@ backgroundColor: Colors.green.shade100,
   }
 
   Widget _buildSocialIcon(String assetPath) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(25),
-        child: Image.asset(
-          assetPath,  
-          width: 40,
-          height: 40,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
+  final isLottie = assetPath.toLowerCase().endsWith('.json');
+  return Container(
+    width: 70,
+    height: 70,
+    // decoration: BoxDecoration(
+    //   color: Colors.white,
+    //   shape: BoxShape.circle,
+    //   boxShadow: [
+    //     BoxShadow(
+    //       color: Colors.grey.withOpacity(0.2),
+    //       blurRadius: 4,
+    //       offset: const Offset(0, 2),
+    //     ),
+    //   ],
+    // ),
+    child: Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: isLottie
+          ? Lottie.asset(assetPath, repeat: true, animate: true)
+          : Image.asset(assetPath, fit: BoxFit.contain),
+    ),
+   );
   }
 }

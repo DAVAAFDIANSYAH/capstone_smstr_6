@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class HistoryController extends GetxController {
   static const String _baseUrl = 'https://auth-rho-ochre.vercel.app';
@@ -105,6 +106,39 @@ class HistoryController extends GetxController {
   Future<void> refreshHistory() async {
     await fetchPoseHistory();
   }
+Future<void> deletePoseHistory(String id) async {
+  try {
+    final box = GetStorage();
+    final token = box.read('jwt_token') ?? box.read('google_id_token');
+
+    if (token == null) {
+      Get.snackbar('Error', 'Token tidak ditemukan',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
+
+    final response = await http.delete(
+      Uri.parse('$_baseUrl$_endpoint/$id'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      historyList.removeWhere((item) => item.id == id);
+      Get.snackbar('Sukses', 'History pose berhasil dihapus',
+          backgroundColor: Colors.green, colorText: Colors.white);
+    } else {
+      final msg = jsonDecode(response.body)['message'] ?? 'Gagal menghapus data';
+      Get.snackbar('Error', msg,
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  } catch (e) {
+    Get.snackbar('Error', 'Gagal menghapus history: $e',
+        backgroundColor: Colors.red, colorText: Colors.white);
+  }
+}
 
   void clearHistory() {
     historyList.clear();
@@ -134,12 +168,19 @@ class PoseHistory {
     );
   }
 
-  String get formattedDate {
-    try {
-      final DateTime dateTime = DateTime.parse(timestamp);
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-    } catch (e) {
-      return timestamp;
+  DateTime get parsedTimestamp {
+  try {
+    if (timestamp.endsWith('Z')) {
+      return DateTime.parse(timestamp).toLocal();  // sudah benar
+    } else {
+      return DateTime.parse(timestamp).toUtc().toLocal();
     }
+  } catch (_) {
+    return DateTime.now(); // fallback
   }
+}
+
+String get formattedTimestamp {
+  return DateFormat('dd MMMM yyyy, HH:mm:ss', 'id_ID').format(parsedTimestamp);
+}
 }

@@ -28,58 +28,75 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 1,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 24),
-            _buildTextField(
-              controller: nameController,
-              label: 'Name',
-              icon: Icons.person,
-            ),
-            const SizedBox(height: 20),
-            _buildTextField(
-              controller: emailController,
-              label: 'Email',
-              icon: Icons.email,
-            ),
-            const SizedBox(height: 20),
-            _buildPasswordField(),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                controller.EditProfile(
-                  nameController.text,
-                  emailController.text,
-                  passwordController.text,
-                );
-                Get.back();
-                Get.snackbar('Success', 'Profile updated successfully');
-              },
-              child: const Text('Save', style: TextStyle(fontSize: 16)),
-            ),
-          ],
+    return Obx(() {
+      if (controller.loginMethod.value == 'google') {
+        Future.microtask(() {
+          if (Get.isOverlaysOpen == false) {
+            Get.back(); // kembali ke halaman sebelumnya
+            Get.snackbar(
+              'Akses Ditolak',
+              'Edit profile tidak tersedia untuk login Google',
+              snackPosition: SnackPosition.BOTTOM,
+            );
+          }
+        });
+        return const SizedBox(); // Kosongkan tampilan
+      }
+
+      // Jika login manual, tampilkan halaman edit profile
+      return Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          title: const Text('Edit Profile'),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 1,
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 24),
+              _buildTextField(
+                controller: nameController,
+                label: 'Name',
+                icon: Icons.person,
+              ),
+              const SizedBox(height: 20),
+              _buildTextField(
+                controller: emailController,
+                label: 'Email',
+                icon: Icons.email,
+              ),
+              const SizedBox(height: 20),
+              _buildPasswordField(),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  controller.EditProfile(
+                    nameController.text,
+                    emailController.text,
+                    passwordController.text,
+                  );
+                  Get.back();
+                  Get.snackbar('Success', 'Profile updated successfully');
+                },
+                child: const Text('Save', style: TextStyle(fontSize: 16)),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildTextField({
@@ -94,7 +111,8 @@ class _EditProfileState extends State<EditProfile> {
         prefixIcon: Icon(icon),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -129,7 +147,8 @@ class _EditProfileState extends State<EditProfile> {
         ),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),

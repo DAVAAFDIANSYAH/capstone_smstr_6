@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
@@ -51,9 +54,13 @@ class LoginController extends GetxController {
     }
 
     try {
+      final deviceInfo = await getDeviceInfo(); // ini sudah string
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
-        headers: {'Content-Type': 'application/json'},
+       headers: {
+      'Content-Type': 'application/json',
+      'Device-Info': deviceInfo, // ✅ Kirim di header, bukan body
+    },
         body: jsonEncode({
           'email': emailController.text.trim(),
           'password': passwordController.text.trim(),
@@ -99,7 +106,7 @@ class LoginController extends GetxController {
     }
   }
 
-   
+  
 
   Future<void> signInWithGoogle() async {
       final String baseUrl = 'https://auth-rho-ochre.vercel.app';
@@ -128,10 +135,13 @@ class LoginController extends GetxController {
 
       print("Login sukses: ${googleUser.displayName} (${googleUser.email})");
 
-      // Kirim id_token ke backend
+      final deviceInfo = await getDeviceInfo();
       final response = await http.post(
         Uri.parse('$baseUrl/auth/google'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+        'Content-Type': 'application/json',
+        'Device-Info': deviceInfo, // ⬅️ Pastikan ini dikirim
+      },
         body: jsonEncode({
           'id_token': googleAuth.idToken,
           'email': googleUser.email,
@@ -165,4 +175,21 @@ class LoginController extends GetxController {
       Get.snackbar("Error", "Terjadi kesalahan saat login: $e");
     }
   }
+  Future<String> getDeviceInfo() async {
+  final deviceInfoPlugin = DeviceInfoPlugin();
+  try {
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      return 'Android: ${androidInfo.manufacturer} ${androidInfo.model}';
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfoPlugin.iosInfo;
+      return 'iOS: ${iosInfo.name} ${iosInfo.systemVersion}';
+    } else {
+      return 'Unknown Device';
+    }
+  } catch (e) {
+    return 'Unknown Device';
+  }
+}
+
 }
